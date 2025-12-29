@@ -3,383 +3,364 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VaultPad PRIME | Next-Gen Workspace</title>
-    <!-- Libraries -->
+    <title>VaultPad AURUM | Golden Premium Edition</title>
+    
+    <!-- Premium Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.0/lucide.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --bg: #000000;
-            --card: #0a0a0b;
-            --accent: #00ff88; /* Emerald Neon */
-            --accent-glow: rgba(0, 255, 136, 0.3);
-            --text: #ffffff;
-            --border: #1a1a1c;
+            --gold: #D4AF37;
+            --gold-bright: #FFD700;
+            --gold-dark: #996515;
+            --bg: #0a0a0a;
+            --surface: #141414;
+            --text: #e0e0e0;
+            --border: #2a2a2a;
         }
 
-        [data-theme="cyber"] { --accent: #ff00ff; --accent-glow: rgba(255, 0, 255, 0.3); }
-        [data-theme="gold"] { --accent: #ffaa00; --accent-glow: rgba(255, 170, 0, 0.3); }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        
+        body { 
+            background: var(--bg); 
+            color: var(--text); 
+            height: 100vh; 
+            overflow: hidden; 
+            display: flex; 
+            justify-content: center;
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(212, 175, 55, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(212, 175, 55, 0.05) 0%, transparent 50%);
+        }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; -webkit-tap-highlight-color: transparent; }
-
-        body { background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; justify-content: center; }
-
-        /* --- Main UI Shell --- */
-        .prime-shell {
-            width: 100%; max-width: 500px; background: var(--card); height: 100vh;
-            position: relative; border-left: 1px solid var(--border); border-right: 1px solid var(--border);
-            display: flex; flex-direction: column;
+        /* --- UI Wrapper --- */
+        .aurum-shell {
+            width: 100%; max-width: 500px; background: var(--surface); height: 100vh;
+            position: relative; border-left: 1px solid var(--border);
+            border-right: 1px solid var(--border); display: flex; flex-direction: column;
+            box-shadow: 0 0 100px rgba(0,0,0,1);
         }
 
         /* --- Header --- */
-        .prime-nav { padding: 30px 20px 10px; display: flex; justify-content: space-between; align-items: center; }
-        .prime-nav h1 { font-size: 28px; font-weight: 800; background: linear-gradient(45deg, var(--accent), #ffffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
-        /* --- Search & Filter --- */
-        .toolbar-top { padding: 10px 20px; display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; }
-        .chip { background: var(--border); padding: 6px 15px; border-radius: 20px; font-size: 12px; white-space: nowrap; cursor: pointer; color: #888; border: 1px solid transparent; }
-        .chip.active { background: var(--accent-glow); color: var(--accent); border-color: var(--accent); }
-
-        /* --- Dashboard Grid --- */
-        .notes-area { flex: 1; overflow-y: auto; padding: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; align-content: start; }
-        .prime-card { 
-            background: #0d0d0f; border: 1px solid var(--border); border-radius: 22px; padding: 18px; 
-            cursor: pointer; transition: 0.3s; position: relative; animation: popIn 0.3s ease-out;
-            display: flex; flex-direction: column; min-height: 140px;
+        header { 
+            padding: 40px 25px 20px; text-align: center; 
+            border-bottom: 1px solid var(--border);
         }
-        .prime-card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
-        .prime-card h3 { font-size: 16px; margin-bottom: 8px; color: var(--text); }
-        .prime-card p { font-size: 12px; color: #666; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
-        .lock-indicator { position: absolute; top: 15px; right: 15px; color: var(--accent); }
-
-        @keyframes popIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-
-        /* --- Full Screen Editor --- */
-        .prime-editor { 
-            position: absolute; inset: 0; background: var(--bg); z-index: 500; 
-            display: none; flex-direction: column; 
+        .premium-badge {
+            font-size: 10px; color: var(--gold); border: 1px solid var(--gold);
+            padding: 2px 8px; border-radius: 50px; text-transform: uppercase;
+            letter-spacing: 2px; margin-bottom: 10px; display: inline-block;
         }
-        .editor-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
-        .editor-body { flex: 1; padding: 25px; overflow-y: auto; display: flex; flex-direction: column; }
+        header h1 { 
+            font-family: 'Playfair Display', serif; font-size: 32px; 
+            background: linear-gradient(to right, var(--gold-dark), var(--gold-bright), var(--gold-dark));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        /* --- Dashboard --- */
+        .dashboard { flex: 1; overflow-y: auto; padding: 25px; padding-bottom: 120px; }
         
-        #prime-title { font-size: 32px; font-weight: 800; background: none; border: none; color: white; outline: none; width: 100%; margin-bottom: 10px; }
-        #prime-content { flex: 1; background: none; border: none; color: #aaa; font-size: 18px; outline: none; resize: none; line-height: 1.6; }
-
-        /* --- Drawing Canvas Layer --- */
-        #sketch-layer { position: absolute; inset: 0; background: var(--bg); z-index: 600; display: none; flex-direction: column; }
-        canvas { flex: 1; cursor: crosshair; touch-action: none; background: #050505; }
-
-        /* --- Controls --- */
-        .floating-add { 
-            position: absolute; bottom: 30px; right: 25px; width: 65px; height: 65px;
-            background: var(--accent); border-radius: 24px; display: flex; justify-content: center;
-            align-items: center; color: #000; box-shadow: 0 10px 30px var(--accent-glow);
-            cursor: pointer; transition: 0.3s; z-index: 100;
+        .search-container { position: relative; margin-bottom: 30px; }
+        .search-bar {
+            width: 100%; padding: 15px 15px 15px 45px; background: #000;
+            border: 1px solid var(--border); border-radius: 15px; color: white; outline: none;
+            transition: 0.3s;
         }
-        .floating-add:hover { transform: scale(1.1) rotate(90deg); }
+        .search-bar:focus { border-color: var(--gold); box-shadow: 0 0 15px rgba(212, 175, 55, 0.2); }
+        .search-icon { position: absolute; left: 15px; top: 15px; color: var(--gold); }
 
-        .btn-icon { background: var(--border); border: none; color: white; padding: 10px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .btn-icon:hover { background: var(--accent); color: #000; }
-
-        /* --- MODAL --- */
-        .prime-modal-overlay { 
-            position: fixed; inset: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px);
-            display: none; justify-content: center; align-items: center; z-index: 1000;
+        .note-card {
+            background: linear-gradient(145deg, #1a1a1a, #0f0f0f);
+            border: 1px solid var(--border); padding: 25px; border-radius: 25px;
+            margin-bottom: 20px; cursor: pointer; transition: 0.4s;
+            position: relative; overflow: hidden;
         }
-        .prime-modal { background: #0d0d0f; border: 1px solid var(--border); padding: 35px; border-radius: 35px; width: 85%; max-width: 350px; text-align: center; }
-        .prime-modal input { width: 100%; padding: 15px; border-radius: 15px; border: 1px solid var(--border); background: #000; color: white; margin: 20px 0; font-size: 20px; text-align: center; }
+        .note-card:hover { 
+            border-color: var(--gold); transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .note-card::after {
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(212, 175, 55, 0.1), transparent);
+            transition: 0.5s;
+        }
+        .note-card:hover::after { left: 150%; }
 
-        /* --- Preview / Markdown --- */
-        #preview-layer { display: none; padding: 25px; color: #eee; line-height: 1.6; }
-        #preview-layer h1 { color: var(--accent); margin-bottom: 10px; }
+        .note-card h3 { font-size: 20px; color: var(--gold); margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+        .note-card p { font-size: 14px; color: #888; line-height: 1.6; }
+
+        /* --- Floating Plus Button --- */
+        .fab {
+            position: absolute; bottom: 40px; right: 30px; width: 70px; height: 70px;
+            background: linear-gradient(135deg, var(--gold-dark), var(--gold-bright));
+            border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            color: #000; box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+            cursor: pointer; z-index: 100; border: 3px solid #000;
+        }
+
+        /* --- Editor Screen --- */
+        .editor-view {
+            position: absolute; inset: 0; background: var(--bg); z-index: 500;
+            display: none; flex-direction: column;
+        }
+        .editor-header { 
+            padding: 25px; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+        .editor-body { flex: 1; padding: 30px; overflow-y: auto; }
+        
+        #edit-title { 
+            font-family: 'Playfair Display', serif; font-size: 32px; width: 100%;
+            background: none; border: none; color: var(--gold); outline: none; margin-bottom: 20px;
+        }
+        #edit-content { 
+            font-size: 18px; width: 100%; height: 70%; background: none; border: none;
+            color: #ccc; outline: none; resize: none; line-height: 1.8;
+        }
+
+        .gold-toolbar { 
+            padding: 15px 25px; background: #000; display: flex; justify-content: space-between;
+            border-top: 1px solid var(--border);
+        }
+        .tool-btn { background: none; border: none; color: var(--gold); cursor: pointer; transition: 0.2s; }
+        .tool-btn:hover { transform: scale(1.2); filter: brightness(1.2); }
+
+        /* --- Premium Modals --- */
+        .overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px);
+            z-index: 1000; display: none; justify-content: center; align-items: center;
+        }
+        .premium-modal {
+            background: var(--surface); border: 1px solid var(--gold); padding: 40px;
+            border-radius: 30px; width: 85%; max-width: 360px; text-align: center;
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.1);
+        }
+        .premium-modal input {
+            width: 100%; padding: 18px; border-radius: 15px; border: 1px solid var(--border);
+            background: #000; color: white; margin: 25px 0; text-align: center; font-size: 22px;
+            outline: none;
+        }
+        .premium-modal input:focus { border-color: var(--gold); }
+        .btn-gold {
+            width: 100%; padding: 18px; border-radius: 15px; border: none;
+            background: linear-gradient(to right, var(--gold-dark), var(--gold-bright));
+            color: #000; font-weight: 800; cursor: pointer; text-transform: uppercase;
+        }
 
         /* --- Custom Scrollbar --- */
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: var(--gold-dark); border-radius: 10px; }
+
+        .date-badge { font-size: 11px; color: var(--gold-dark); margin-top: 15px; display: block; }
     </style>
 </head>
-<body data-theme="emerald">
+<body>
 
-    <div class="prime-shell">
-        <!-- Dashboard View -->
-        <div id="dashboard">
-            <div class="prime-nav">
-                <h1>VaultPad <span style="font-weight: 300;">PRIME</span></h1>
-                <div style="display: flex; gap: 10px;">
-                    <button class="btn-icon" onclick="toggleTheme()"><i data-lucide="palette" size="20"></i></button>
-                    <button class="btn-icon" onclick="exportData()"><i data-lucide="share-2" size="20"></i></button>
-                </div>
+    <div class="aurum-shell">
+        <header>
+            <span class="premium-badge">VaultPad Aurum Edition</span>
+            <h1>Golden Vault</h1>
+        </header>
+
+        <div class="dashboard">
+            <div class="search-container">
+                <i data-lucide="search" class="search-icon" size="20"></i>
+                <input type="text" class="search-bar" id="search-input" placeholder="Search your gold..." oninput="renderNotes()">
             </div>
-
-            <div class="toolbar-top">
-                <div class="chip active" onclick="filterNotes('all')">All Notes</div>
-                <div class="chip" onclick="filterNotes('locked')">Locked</div>
-                <div class="chip" onclick="filterNotes('sketches')">Sketches</div>
-                <div class="chip" onclick="openTemplates()">Templates</div>
-            </div>
-
-            <div class="notes-area" id="notes-grid">
-                <!-- Notes will be injected here -->
+            <div id="notes-container">
+                <!-- Notes load here -->
             </div>
         </div>
 
-        <!-- The Floating Add Button -->
-        <div class="floating-add" onclick="createNewNote()">
-            <i data-lucide="plus" size="32"></i>
+        <div class="fab" onclick="newNote()">
+            <i data-lucide="crown" size="32"></i>
         </div>
 
-        <!-- PRIME Full Screen Editor -->
-        <div class="prime-editor" id="editor">
+        <!-- EDITOR SCREEN -->
+        <div class="editor-view" id="editor-screen">
             <div class="editor-header">
-                <button class="btn-icon" onclick="closeEditor()"><i data-lucide="x"></i></button>
-                <div style="display: flex; gap: 12px;">
-                    <button class="btn-icon" title="Sketch" onclick="openSketch()"><i data-lucide="pen-tool"></i></button>
-                    <button class="btn-icon" title="Preview" onclick="togglePreview()"><i data-lucide="eye"></i></button>
-                    <button class="btn-icon" title="Security" onclick="setSecurity()"><i data-lucide="shield-check"></i></button>
-                    <button class="btn-icon" style="background: var(--accent); color: #000;" onclick="saveNote()"><i data-lucide="save"></i></button>
+                <button class="tool-btn" onclick="exitEditor()"><i data-lucide="chevron-left" size="32"></i></button>
+                <div style="display: flex; gap: 20px;">
+                    <button class="tool-btn" onclick="exportPDF()"><i data-lucide="file-down"></i></button>
+                    <button class="tool-btn" onclick="setNoteSecurity()"><i data-lucide="shield-check"></i></button>
+                    <button class="tool-btn" style="color: var(--gold-bright)" onclick="saveAndClose()"><i data-lucide="check-circle-2"></i></button>
                 </div>
             </div>
             <div class="editor-body">
-                <input type="text" id="prime-title" placeholder="Title...">
-                <div id="preview-layer"></div>
-                <textarea id="prime-content" placeholder="Type or use Markdown (# Heading)..."></textarea>
+                <input type="text" id="edit-title" placeholder="Prestige Title...">
+                <textarea id="edit-content" placeholder="Write your golden thoughts here..."></textarea>
+            </div>
+            <div class="gold-toolbar">
+                <div style="display: flex; gap: 20px;">
+                    <button class="tool-btn" onclick="applyFormat('bold')"><i data-lucide="bold"></i></button>
+                    <button class="tool-btn" onclick="applyFormat('list')"><i data-lucide="list"></i></button>
+                </div>
+                <span id="word-count" style="font-size: 12px; color: var(--gold-dark);">0 words</span>
             </div>
         </div>
 
-        <!-- Sketch Pad Layer -->
-        <div id="sketch-layer">
-            <div class="editor-header">
-                <button class="btn-icon" onclick="closeSketch()"><i data-lucide="arrow-left"></i> Done</button>
-                <button class="btn-icon" onclick="clearCanvas()"><i data-lucide="trash-2"></i></button>
-                <input type="color" id="brush-color" value="#00ff88" style="background:none; border:none; width:40px; height:40px;">
-            </div>
-            <canvas id="canvas"></canvas>
-        </div>
-
-        <!-- Security Modal -->
-        <div class="prime-modal-overlay" id="modal-overlay">
-            <div class="prime-modal">
-                <i data-lucide="lock" size="48" style="color: var(--accent)"></i>
-                <h2 style="margin-top: 15px;" id="modal-title">Secure Access</h2>
+        <!-- AUTH MODAL -->
+        <div class="overlay" id="auth-modal">
+            <div class="premium-modal">
+                <i data-lucide="lock" size="50" style="color: var(--gold)"></i>
+                <h2 id="modal-title" style="margin-top: 15px;">Vault Authorization</h2>
                 <input type="password" id="modal-pass" placeholder="••••">
-                <button class="btn-icon" style="width:100%; padding: 15px;" id="modal-btn">Authorize</button>
-                <button class="btn-icon" style="width:100%; margin-top: 10px; background:none;" onclick="closeModal()">Cancel</button>
+                <button class="btn-gold" id="modal-btn">Access Secrets</button>
+                <button class="tool-btn" style="width: 100%; margin-top: 15px;" onclick="closeModal()">Cancel</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Init Icons
         lucide.createIcons();
 
-        let notes = JSON.parse(localStorage.getItem('vault_prime_data')) || [];
+        let notes = JSON.parse(localStorage.getItem('vault_aurum_db')) || [];
         let activeId = null;
-        let isPreview = false;
 
-        // Canvas Settings
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-        let painting = false;
+        // --- Core Engine ---
 
-        // --- Core Render Logic ---
-        function renderNotes(filter = 'all') {
-            const grid = document.getElementById('notes-grid');
-            grid.innerHTML = '';
-            
-            let filtered = notes;
-            if(filter === 'locked') filtered = notes.filter(n => n.password);
-            if(filter === 'sketches') filtered = notes.filter(n => n.sketch);
+        function renderNotes() {
+            const container = document.getElementById('notes-container');
+            const search = document.getElementById('search-input').value.toLowerCase();
+            container.innerHTML = '';
 
-            filtered.forEach(note => {
+            notes.filter(n => n.title.toLowerCase().includes(search)).forEach(n => {
                 const card = document.createElement('div');
-                card.className = 'prime-card';
-                card.onclick = () => openNote(note.id);
+                card.className = 'note-card';
+                card.onclick = () => openNote(n.id);
                 card.innerHTML = `
-                    ${note.password ? '<i data-lucide="lock" class="lock-indicator" size="14"></i>' : ''}
-                    <h3>${note.title || 'Untitled'}</h3>
-                    <p>${note.password ? 'Content is encrypted with AES-256' : (note.content || 'Empty note...')}</p>
-                    <div style="flex:1"></div>
-                    <div style="font-size: 10px; color: var(--accent); opacity: 0.7;">${note.date}</div>
+                    <h3>${n.password ? '<i data-lucide="lock" size="18"></i>' : ''} ${n.title || 'Untitled'}</h3>
+                    <p>${n.password ? 'This luxury note is encrypted with AES-256' : n.content.substring(0, 100) + '...'}</p>
+                    <span class="date-badge">Member since: ${n.date}</span>
+                    <button class="tool-btn" onclick="deleteNote(event, ${n.id})" style="position:absolute; right:25px; bottom:25px; color:#333;"><i data-lucide="trash-2" size="16"></i></button>
                 `;
-                grid.appendChild(card);
+                container.appendChild(card);
             });
             lucide.createIcons();
         }
 
-        function createNewNote(templateText = '') {
+        function newNote() {
             activeId = null;
-            document.getElementById('prime-title').value = '';
-            document.getElementById('prime-content').value = templateText;
-            document.getElementById('editor').style.display = 'flex';
-            clearCanvas();
+            document.getElementById('edit-title').value = '';
+            document.getElementById('edit-content').value = '';
+            document.getElementById('editor-screen').style.display = 'flex';
         }
 
         function openNote(id) {
             const note = notes.find(n => n.id === id);
             activeId = id;
-
+            
             if (note.password) {
                 showModal("Enter Vault Key", (pass) => {
                     try {
                         const bytes = CryptoJS.AES.decrypt(note.content, pass);
-                        const decrypted = bytes.toString(CryptoJS.enc.Utf8);
-                        if (!decrypted) throw new Error();
-                        loadEditor(note.title, decrypted, note.sketch);
+                        const dec = bytes.toString(CryptoJS.enc.Utf8);
+                        if (!dec) throw 'error';
+                        loadEditor(note.title, dec);
                         closeModal();
-                    } catch (e) { alert("Invalid Secret Key!"); }
+                    } catch(e) { alert("Security Violation: Wrong Key!"); }
                 });
             } else {
-                loadEditor(note.title, note.content, note.sketch);
+                loadEditor(note.title, note.content);
             }
         }
 
-        function loadEditor(title, content, sketchData) {
-            document.getElementById('prime-title').value = title;
-            document.getElementById('prime-content').value = content;
-            document.getElementById('editor').style.display = 'flex';
-            if(sketchData) {
-                const img = new Image();
-                img.onload = () => ctx.drawImage(img, 0, 0);
-                img.src = sketchData;
-            }
+        function loadEditor(t, c) {
+            document.getElementById('edit-title').value = t;
+            document.getElementById('edit-content').value = c;
+            document.getElementById('editor-screen').style.display = 'flex';
+            updateWordCount();
         }
 
-        function saveNote() {
-            const title = document.getElementById('prime-title').value;
-            const content = document.getElementById('prime-content').value;
-            const sketch = canvas.toDataURL(); // Save canvas as Base64
-
-            if (!title && !content) return closeEditor();
-
-            const noteData = {
-                id: activeId || Date.now(),
-                title: title || "Untitled Note",
-                content: content,
-                sketch: sketch === canvas.toDataURL() ? null : sketch, // Check if canvas is empty
-                password: activeId ? notes.find(n => n.id === activeId).password : null,
-                date: new Date().toLocaleDateString()
-            };
-
-            // Re-encrypt if password exists
-            if(noteData.password) {
-                noteData.content = CryptoJS.AES.encrypt(content, noteData.password).toString();
-            }
+        function saveAndClose() {
+            const t = document.getElementById('edit-title').value;
+            let c = document.getElementById('edit-content').value;
+            if (!t && !c) return exitEditor();
 
             if (activeId) {
-                const idx = notes.findIndex(n => n.id === activeId);
-                notes[idx] = noteData;
+                const n = notes.find(x => x.id === activeId);
+                if (n.password) c = CryptoJS.AES.encrypt(c, n.password).toString();
+                Object.assign(n, { title: t, content: c, date: new Date().toLocaleDateString() });
             } else {
-                notes.unshift(noteData);
+                notes.unshift({ 
+                    id: Date.now(), title: t, content: c, password: null, 
+                    date: new Date().toLocaleDateString() 
+                });
             }
-
-            sync();
-            closeEditor();
+            sync(); exitEditor();
         }
 
-        function setSecurity() {
-            showModal("Set Secret Password", (pass) => {
-                if(!pass) return alert("Password cannot be empty!");
-                const content = document.getElementById('prime-content').value;
-                const encrypted = CryptoJS.AES.encrypt(content, pass).toString();
-                
+        function setNoteSecurity() {
+            showModal("Secure with Gold Key", (p) => {
+                if (!p) return;
+                const c = document.getElementById('edit-content').value;
+                const enc = CryptoJS.AES.encrypt(c, p).toString();
                 if (activeId) {
-                    const note = notes.find(n => n.id === activeId);
-                    note.content = encrypted;
-                    note.password = pass;
+                    const n = notes.find(x => x.id === activeId);
+                    n.content = enc; n.password = p;
                 } else {
-                    notes.unshift({
-                        id: Date.now(), title: document.getElementById('prime-title').value || "Locked Note",
-                        content: encrypted, password: pass, date: new Date().toLocaleDateString()
+                    notes.unshift({ 
+                        id: Date.now(), title: document.getElementById('edit-title').value || 'Premium Note',
+                        content: enc, password: p, date: new Date().toLocaleDateString() 
                     });
                 }
-                sync(); closeModal(); closeEditor();
+                sync(); closeModal(); exitEditor();
             });
         }
 
-        // --- Features ---
-        function togglePreview() {
-            const textarea = document.getElementById('prime-content');
-            const preview = document.getElementById('preview-layer');
-            isPreview = !isPreview;
-
-            if(isPreview) {
-                preview.innerHTML = marked.parse(textarea.value);
-                textarea.style.display = 'none';
-                preview.style.display = 'block';
-            } else {
-                textarea.style.display = 'block';
-                preview.style.display = 'none';
+        function deleteNote(e, id) {
+            e.stopPropagation();
+            if (confirm("Kyu aap is Premium Note ko hamesha ke liye mitana chahte hain?")) {
+                notes = notes.filter(n => n.id !== id);
+                sync();
             }
         }
 
-        function openTemplates() {
-            const type = prompt("Choose: 1. Meeting  2. Journal  3. Checklist");
-            if(type == "1") createNewNote("# Meeting Notes\n- Date:\n- Participants:\n- Action Items:");
-            if(type == "2") createNewNote("# Daily Journal\n- How was today?\n- Grateful for:\n- Tomorrow's Goal:");
-            if(type == "3") createNewNote("# Shopping List\n- [ ] Milk\n- [ ] Eggs\n- [ ] Bread");
+        // --- Premium Utilities ---
+
+        function exportPDF() {
+            const t = document.getElementById('edit-title').value;
+            const c = document.getElementById('edit-content').value;
+            const text = `VAULTPAD AURUM - PREMIUM EXPORT\n\nTITLE: ${t}\nDATE: ${new Date().toLocaleString()}\n--------------------------\n\n${c}`;
+            const blob = new Blob([text], {type: "text/plain"});
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `${t || 'premium_note'}.txt`;
+            a.click();
         }
 
-        // --- Canvas Logic ---
-        function openSketch() { 
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight - 100;
-            document.getElementById('sketch-layer').style.display = 'flex'; 
-        }
-        function closeSketch() { document.getElementById('sketch-layer').style.display = 'none'; }
-        
-        function startPosition(e) { painting = true; draw(e); }
-        function finishedPosition() { painting = false; ctx.beginPath(); }
-        function draw(e) {
-            if (!painting) return;
-            ctx.lineWidth = 5;
-            ctx.lineCap = 'round';
-            ctx.strokeStyle = document.getElementById('brush-color').value;
-            
-            const x = e.clientX || e.touches[0].clientX;
-            const y = (e.clientY || e.touches[0].clientY) - 80;
+        function applyFormat(type) {
+            const area = document.getElementById('edit-content');
+            const start = area.selectionStart;
+            const end = area.selectionEnd;
+            const selectedText = area.value.substring(start, end);
 
-            ctx.lineTo(x, y);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(x, y);
+            if (type === 'bold') area.setRangeText(`**${selectedText}**`);
+            if (type === 'list') area.setRangeText(`\n- ${selectedText}`);
+            area.focus();
         }
 
-        canvas.addEventListener('mousedown', startPosition);
-        canvas.addEventListener('mouseup', finishedPosition);
-        canvas.addEventListener('mousemove', draw);
-        canvas.addEventListener('touchstart', startPosition);
-        canvas.addEventListener('touchend', finishedPosition);
-        canvas.addEventListener('touchmove', draw);
-
-        function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
-
-        // --- Helpers ---
-        function sync() { localStorage.setItem('vault_prime_data', JSON.stringify(notes)); renderNotes(); }
-        function closeEditor() { document.getElementById('editor').style.display = 'none'; isPreview = false; }
-        function toggleTheme() { 
-            const themes = ['emerald', 'cyber', 'gold'];
-            const current = document.body.getAttribute('data-theme');
-            const next = themes[(themes.indexOf(current) + 1) % themes.length];
-            document.body.setAttribute('data-theme', next);
+        function updateWordCount() {
+            const text = document.getElementById('edit-content').value.trim();
+            const count = text ? text.split(/\s+/).length : 0;
+            document.getElementById('word-count').innerText = `${count} words`;
         }
+
         function showModal(title, cb) {
-            document.getElementById('modal-overlay').style.display = 'flex';
+            document.getElementById('auth-modal').style.display = 'flex';
             document.getElementById('modal-title').innerText = title;
-            document.getElementById('modal-btn').onclick = () => cb(document.getElementById('modal-pass').value);
+            const input = document.getElementById('modal-pass');
+            input.value = ''; input.focus();
+            document.getElementById('modal-btn').onclick = () => cb(input.value);
         }
-        function closeModal() { document.getElementById('modal-overlay').style.display = 'none'; document.getElementById('modal-pass').value = ''; }
-        function exportData() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(notes));
-            const downloadAnchorNode = document.createElement('a');
-            downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", "VaultPad_Prime_Backup.json");
-            document.body.appendChild(downloadAnchorNode);
-            downloadAnchorNode.click();
-            downloadAnchorNode.remove();
-        }
+
+        function closeModal() { document.getElementById('auth-modal').style.display = 'none'; }
+        function exitEditor() { document.getElementById('editor-screen').style.display = 'none'; }
+        function sync() { localStorage.setItem('vault_aurum_db', JSON.stringify(notes)); renderNotes(); }
+
+        document.getElementById('edit-content').oninput = updateWordCount;
 
         renderNotes();
     </script>
