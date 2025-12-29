@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NOTE PAK | Golden Premium</title>
     
-    <!-- Premium Libraries -->
+    <!-- Libraries (CryptoJS and Icons) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.0/lucide.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Outfit:wght@300;400;600;900&display=swap" rel="stylesheet">
@@ -13,7 +13,7 @@
     <style>
         :root {
             --gold: #D4AF37;
-            --gold-bright: #FFD700;
+            --gold-light: #FFD700;
             --bg: #000000;
             --surface: #0a0a0a;
             --card: #141414;
@@ -27,29 +27,30 @@
         #splash {
             position: fixed; inset: 0; background: #000; z-index: 9999;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            transition: 0.8s ease;
+            cursor: pointer; transition: 0.5s ease;
         }
         #splash h1 { 
-            font-family: 'Playfair Display', serif; font-size: 55px; font-weight: 900;
-            background: linear-gradient(to right, #996515, var(--gold-bright), #996515);
+            font-family: 'Playfair Display', serif; font-size: 50px; font-weight: 900;
+            background: linear-gradient(to right, #996515, var(--gold-light), #996515);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             animation: shimmer 3s infinite linear; background-size: 200%;
         }
         @keyframes shimmer { 0% { background-position: -100%; } 100% { background-position: 100%; } }
 
-        /* --- APP CONTAINER --- */
+        /* --- APP SHELL --- */
         .app-shell {
             width: 100%; max-width: 500px; background: var(--surface); height: 100vh;
             position: relative; border-left: 1px solid var(--border); border-right: 1px solid var(--border);
-            display: none; flex-direction: column;
+            display: none; flex-direction: column; /* Initially hidden */
         }
 
         header { padding: 40px 20px 15px; text-align: center; border-bottom: 1px solid var(--border); }
         header h2 { font-family: 'Playfair Display', serif; color: var(--gold); font-size: 28px; }
 
-        .dashboard { flex: 1; overflow-y: auto; padding: 20px 20px 120px; }
+        .dashboard { flex: 1; overflow-y: auto; padding: 20px 20px 150px; }
+        
         .search-box {
-            width: 100%; padding: 15px 40px; background: #000; border: 1px solid var(--border);
+            width: 100%; padding: 15px 15px; background: #000; border: 1px solid var(--border);
             border-radius: 12px; color: white; outline: none; margin-bottom: 20px;
         }
 
@@ -58,18 +59,18 @@
             border-radius: 15px; margin-bottom: 15px; cursor: pointer;
         }
         .note-card h3 { color: var(--gold); margin-bottom: 5px; font-family: 'Playfair Display', serif; }
-        .note-card p { font-size: 13px; color: #888; }
 
-        /* --- FIXED PLUS BUTTON --- */
+        /* --- PLUS BUTTON --- */
         .fab {
-            position: fixed; bottom: 90px; right: 30px; width: 65px; height: 65px;
-            background: linear-gradient(135deg, #996515, var(--gold-bright));
+            position: fixed; bottom: 100px; right: calc(50% - 220px); width: 65px; height: 65px;
+            background: linear-gradient(135deg, #996515, var(--gold-light));
             border-radius: 50%; display: none; justify-content: center; align-items: center;
             color: #000; box-shadow: 0 5px 20px rgba(212, 175, 55, 0.5);
             cursor: pointer; z-index: 8000; border: 3px solid #000;
         }
+        @media (max-width: 500px) { .fab { right: 25px; } }
 
-        /* --- EDITOR VIEW (FIXED) --- */
+        /* --- EDITOR VIEW --- */
         #editor-view {
             position: fixed; inset: 0; background: #000; z-index: 9000;
             display: none; flex-direction: column; width: 100%; max-width: 500px;
@@ -77,43 +78,34 @@
         }
         .editor-header { padding: 20px; display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); }
         .editor-content { flex: 1; padding: 20px; display: flex; flex-direction: column; }
-        #note-title { font-family: 'Playfair Display', serif; font-size: 30px; background: none; border: none; color: var(--gold); outline: none; margin-bottom: 10px; }
+        #note-title { font-family: 'Playfair Display', serif; font-size: 30px; background: none; border: none; color: var(--gold); outline: none; width: 100%; margin-bottom: 10px; }
         #note-text { font-size: 18px; color: #ccc; background: none; border: none; outline: none; flex: 1; resize: none; line-height: 1.6; }
 
         /* --- FOOTER --- */
-        .footer { padding: 15px; text-align: center; font-size: 10px; color: #555; background: #000; border-top: 1px solid var(--border); z-index: 100; }
+        .footer { padding: 15px; text-align: center; font-size: 10px; color: #555; background: #000; border-top: 1px solid var(--border); }
         .footer span { color: var(--gold); font-weight: 900; }
 
-        /* --- MODAL --- */
-        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9999; display: none; justify-content: center; align-items: center; }
-        .modal { background: #111; border: 1px solid var(--gold); padding: 30px; border-radius: 20px; width: 80%; text-align: center; }
-        .modal input { width: 100%; padding: 12px; margin: 20px 0; background: #000; color: white; border: 1px solid var(--border); text-align: center; font-size: 20px; }
-        .btn-gold { width: 100%; padding: 15px; background: var(--gold); border: none; font-weight: bold; cursor: pointer; }
-        
         .btn-icon { background: none; border: none; color: var(--gold); cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <!-- Splash Screen -->
-    <div id="splash">
+    <!-- Splash Screen: Is par click kar ke bhi aage ja sakte hain -->
+    <div id="splash" onclick="enterApp()">
         <h1>NOTE PAK</h1>
-        <p style="color: var(--gold); letter-spacing: 3px; font-size: 10px;">PREMIUM EDITION</p>
+        <p style="color: var(--gold); letter-spacing: 3px; font-size: 10px; margin-top: 10px;">GOLDEN EDITION</p>
+        <p style="color: #333; font-size: 9px; margin-top: 30px;">Click to skip</p>
     </div>
 
-    <!-- Plus Button -->
-    <div id="fab-btn" class="fab" onclick="openEditor()">
-        <i data-lucide="plus" size="35" stroke-width="3"></i>
-    </div>
-
-    <div class="app-shell" id="app-main">
+    <!-- Dashbord UI -->
+    <div class="app-shell" id="app-ui">
         <header>
             <h2>GOLDEN VAULT</h2>
         </header>
 
         <div class="dashboard">
-            <input type="text" class="search-box" id="search-in" placeholder="Search gold..." oninput="render()">
-            <div id="notes-list"></div>
+            <input type="text" class="search-box" id="search-bar" placeholder="Search secrets..." oninput="render()">
+            <div id="notes-container"></div>
         </div>
 
         <div class="footer">
@@ -121,132 +113,83 @@
         </div>
     </div>
 
+    <!-- Plus Button -->
+    <div id="plus-btn" class="fab" onclick="openEditor()">
+        <i data-lucide="plus" size="35" stroke-width="3"></i>
+    </div>
+
     <!-- Editor -->
     <div id="editor-view">
         <div class="editor-header">
             <button class="btn-icon" onclick="closeEditor()"><i data-lucide="arrow-left" size="30"></i></button>
             <div style="display: flex; gap: 20px;">
-                <button class="btn-icon" onclick="lockNote()"><i data-lucide="lock" size="24"></i></button>
                 <button class="btn-icon" onclick="saveNote()"><i data-lucide="save" size="24"></i></button>
             </div>
         </div>
         <div class="editor-content">
             <input type="text" id="note-title" placeholder="Noble Title...">
-            <textarea id="note-text" placeholder="Write your golden thoughts here..."></textarea>
-        </div>
-    </div>
-
-    <!-- Password Modal -->
-    <div class="overlay" id="modal-bg">
-        <div class="modal">
-            <h3 style="color: var(--gold)">Authorize Access</h3>
-            <input type="password" id="modal-pass" placeholder="••••">
-            <button class="btn-gold" id="modal-btn">PROCEED</button>
-            <button class="btn-icon" style="margin-top:10px" onclick="closeModal()">Cancel</button>
+            <textarea id="note-text" placeholder="Start writing your golden thoughts..."></textarea>
         </div>
     </div>
 
     <script>
+        // Start Icons
         lucide.createIcons();
-        let notes = JSON.parse(localStorage.getItem('notepak_gold_v2')) || [];
-        let activeId = null;
+        
+        let notes = JSON.parse(localStorage.getItem('notepak_gold_v3')) || [];
+        
+        // Splash Fix Logic
+        function enterApp() {
+            document.getElementById('splash').style.display = 'none';
+            document.getElementById('app-ui').style.display = 'flex';
+            document.getElementById('plus-btn').style.display = 'flex';
+            render();
+        }
 
-        // Splash Hide logic
-        window.onload = () => {
-            setTimeout(() => {
-                document.getElementById('splash').style.display = 'none';
-                document.getElementById('app-main').style.display = 'flex';
-                document.getElementById('fab-btn').style.display = 'flex';
-                render();
-            }, 3000);
-        };
+        // Auto skip after 3 seconds
+        setTimeout(enterApp, 3000);
 
         function render() {
-            const list = document.getElementById('notes-list');
-            const q = document.getElementById('search-in').value.toLowerCase();
+            const list = document.getElementById('notes-container');
+            const q = document.getElementById('search-bar').value.toLowerCase();
             list.innerHTML = '';
             notes.filter(n => n.title.toLowerCase().includes(q)).forEach(n => {
                 const div = document.createElement('div');
                 div.className = 'note-card';
-                div.onclick = () => openNote(n.id);
-                div.innerHTML = `<h3>${n.pass ? '🔒' : ''} ${n.title || 'Untitled'}</h3><p>${n.pass ? 'Encrypted' : n.text.substring(0,60)}...</p>`;
+                div.onclick = () => {
+                    document.getElementById('note-title').value = n.title;
+                    document.getElementById('note-text').value = n.text;
+                    document.getElementById('editor-view').style.display = 'flex';
+                    document.getElementById('plus-btn').style.display = 'none';
+                };
+                div.innerHTML = `<h3>${n.title || 'Untitled'}</h3><p>${n.text.substring(0, 70)}...</p>`;
                 list.appendChild(div);
             });
             lucide.createIcons();
         }
 
         function openEditor() {
-            activeId = null;
             document.getElementById('note-title').value = '';
             document.getElementById('note-text').value = '';
             document.getElementById('editor-view').style.display = 'flex';
-            document.getElementById('fab-btn').style.display = 'none';
+            document.getElementById('plus-btn').style.display = 'none';
         }
 
         function closeEditor() {
             document.getElementById('editor-view').style.display = 'none';
-            document.getElementById('fab-btn').style.display = 'flex';
+            document.getElementById('plus-btn').style.display = 'flex';
         }
 
         function saveNote() {
             const t = document.getElementById('note-title').value;
-            let c = document.getElementById('note-text').value;
-            if(!t && !c) return closeEditor();
-
-            if(activeId) {
-                const n = notes.find(x => x.id === activeId);
-                if(n.pass) c = CryptoJS.AES.encrypt(c, n.pass).toString();
-                Object.assign(n, {title: t, text: c});
-            } else {
-                notes.unshift({id: Date.now(), title: t, text: c, pass: null});
+            const c = document.getElementById('note-text').value;
+            if(t || c) {
+                notes.unshift({id: Date.now(), title: t, text: c});
+                localStorage.setItem('notepak_gold_v3', JSON.stringify(notes));
+                render();
             }
-            localStorage.setItem('notepak_gold_v2', JSON.stringify(notes));
-            render(); closeEditor();
+            closeEditor();
         }
-
-        function openNote(id) {
-            const n = notes.find(x => x.id === id);
-            activeId = id;
-            if(n.pass) {
-                showModal("Enter Key", (p) => {
-                    try {
-                        const b = CryptoJS.AES.decrypt(n.text, p);
-                        const d = b.toString(CryptoJS.enc.Utf8);
-                        if(!d) throw 'err';
-                        document.getElementById('note-title').value = n.title;
-                        document.getElementById('note-text').value = d;
-                        document.getElementById('editor-view').style.display = 'flex';
-                        closeModal();
-                    } catch(e) { alert("Wrong Password!"); }
-                });
-            } else {
-                document.getElementById('note-title').value = n.title;
-                document.getElementById('note-text').value = n.text;
-                document.getElementById('editor-view').style.display = 'flex';
-            }
-        }
-
-        function lockNote() {
-            showModal("Set Password", (p) => {
-                if(!p) return;
-                const c = document.getElementById('note-text').value;
-                const enc = CryptoJS.AES.encrypt(c, p).toString();
-                if(activeId) {
-                    const n = notes.find(x => x.id === activeId);
-                    n.text = enc; n.pass = p;
-                } else {
-                    notes.unshift({id: Date.now(), title: document.getElementById('note-title').value, text: enc, pass: p});
-                }
-                localStorage.setItem('notepak_gold_v2', JSON.stringify(notes));
-                closeModal(); closeEditor(); render();
-            });
-        }
-
-        function showModal(title, cb) {
-            document.getElementById('modal-bg').style.display = 'flex';
-            document.getElementById('modal-btn').onclick = () => cb(document.getElementById('modal-pass').value);
-        }
-        function closeModal() { document.getElementById('modal-bg').style.display = 'none'; }
     </script>
 </body>
 </html>
